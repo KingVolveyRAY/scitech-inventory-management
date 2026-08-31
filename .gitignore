@@ -1,0 +1,63 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+/test-results
+/playwright-report
+/blob-report
+/playwright/.cache
+
+# Next.js build
+/.next/
+/out/
+next-env.d.ts
+
+# Production build
+/build
+/dist
+
+# Deployment (Netlify / Vercel)
+.netlify
+.vercel
+
+# Debug and Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.log
+
+# Environment variables — JANGAN PERNAH commit file ini
+.env
+.env.*
+!.env.example
+
+# Editor / OS settings
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# TypeScript build cache
+*.tsbuildinfo
+
+# Local AI / agent tooling (per-device, bukan bagian proyek)
+.gemini/
+.impeccable/
+.codex
+.claude/
+.cursor/
+.aider*
+CLAUDE.md
+AGENTS.md
+
+# Runtime lain
+deno.lock
