@@ -18,7 +18,7 @@ export default async function BorrowPage({ params }: { params: Promise<{ itemId:
   return (
     <div className="grid gap-8 lg:grid-cols-[1.1fr,0.9fr]">
       <BorrowSummary item={item} />
-      <BorrowForm item={item} userId={user.profile.userId} />
+      <BorrowForm item={item} userId={user.profile.userId} userName={user.profile.full_name} />
     </div>
   );
 }

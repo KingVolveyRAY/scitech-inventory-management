@@ -25,14 +25,15 @@ export async function registerUser(input: unknown): Promise<ActionResult<Profile
 
     if (!hasAppwriteConfig()) {
       const mockProfile: Profile = {
-        userId: "user-client",
+        userId: "mock-user-" + Date.now(),
         full_name: values.full_name,
         email: values.email,
-        role: "client",
+        role: "client", // default role for new registrations
         department: values.department,
         created_at: new Date().toISOString(),
         is_active: true
       };
+      mockProfiles.push(mockProfile);
 
       await persistSession({
         secret: "mock-session",
@@ -53,7 +54,7 @@ export async function registerUser(input: unknown): Promise<ActionResult<Profile
       userId: user.$id,
       full_name: values.full_name,
       email: values.email,
-      role: "client",
+      role: "admin",
       department: values.department || "",
       avatar_url: "",
       created_at: new Date().toISOString()
@@ -62,7 +63,7 @@ export async function registerUser(input: unknown): Promise<ActionResult<Profile
     await persistSession({
       secret: session.secret,
       userId: user.$id,
-      role: "client",
+      role: "admin",
       email: values.email,
       name: values.full_name
     });
@@ -125,6 +126,10 @@ export async function updateUserRole(input: unknown): Promise<ActionResult> {
     const values = roleUpdateSchema.parse(input);
 
     if (!hasAppwriteConfig()) {
+      const profile = mockProfiles.find((p) => p.userId === values.userId);
+      if (profile) {
+        profile.role = values.role as "admin" | "client";
+      }
       return { success: true, data: values };
     }
 
@@ -154,6 +159,10 @@ export async function setUserActive(input: unknown): Promise<ActionResult> {
     const values = activeUserSchema.parse(input);
 
     if (!hasAppwriteConfig()) {
+      const profile = mockProfiles.find((p) => p.userId === values.userId);
+      if (profile) {
+        profile.is_active = values.isActive;
+      }
       return { success: true, data: values };
     }
 

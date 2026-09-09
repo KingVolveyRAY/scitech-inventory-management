@@ -5,7 +5,8 @@ import { createAdminClient, ID } from "@/lib/appwrite/server";
 import { InputFile } from "node-appwrite/file";
 import { getLoggedInUser } from "@/lib/appwrite/session";
 import { itemSchema } from "@/lib/validators/items";
-import type { ActionResult } from "@/types";
+import { mockItems } from "@/lib/utils/mock-data";
+import type { ActionResult, Item } from "@/types";
 
 const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
 const ACCEPTED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
@@ -24,7 +25,14 @@ export async function createItem(input: unknown): Promise<ActionResult> {
     const user = await getLoggedInUser();
 
     if (!hasAppwriteConfig()) {
-      return { success: true, data: { $id: ID.unique(), ...values, admin_id: user?.profile.userId, created_at: new Date().toISOString() } };
+      const newItem: Item = {
+        $id: "mock-item-" + Date.now(),
+        ...values,
+        admin_id: user?.profile.userId,
+        created_at: new Date().toISOString()
+      } as Item;
+      mockItems.push(newItem);
+      return { success: true, data: newItem };
     }
 
     const { databases } = createAdminClient();
@@ -45,6 +53,10 @@ export async function updateItem(itemId: string, input: unknown): Promise<Action
     const values = itemSchema.parse(input);
 
     if (!hasAppwriteConfig()) {
+      const itemIndex = mockItems.findIndex((i) => i.$id === itemId);
+      if (itemIndex !== -1) {
+        mockItems[itemIndex] = { ...mockItems[itemIndex], ...values };
+      }
       return { success: true, data: { $id: itemId, ...values } };
     }
 
@@ -60,6 +72,8 @@ export async function updateItem(itemId: string, input: unknown): Promise<Action
 export async function toggleItemAvailability(itemId: string, is_available: boolean): Promise<ActionResult> {
   try {
     if (!hasAppwriteConfig()) {
+      const item = mockItems.find((i) => i.$id === itemId);
+      if (item) item.is_available = is_available;
       return { success: true, data: { itemId, is_available } };
     }
 
@@ -74,6 +88,8 @@ export async function toggleItemAvailability(itemId: string, is_available: boole
 export async function deleteItem(itemId: string): Promise<ActionResult> {
   try {
     if (!hasAppwriteConfig()) {
+      const index = mockItems.findIndex((i) => i.$id === itemId);
+      if (index !== -1) mockItems.splice(index, 1);
       return { success: true, data: { itemId } };
     }
 

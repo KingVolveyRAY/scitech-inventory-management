@@ -15,7 +15,7 @@ import type { z } from "zod";
 
 type BorrowValues = z.infer<typeof loanRequestSchema>;
 
-export function BorrowForm({ item, userId }: { item: Item; userId: string }) {
+export function BorrowForm({ item, userId, userName }: { item: Item; userId: string; userName: string }) {
   const { notify } = useToast();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -41,6 +41,15 @@ export function BorrowForm({ item, userId }: { item: Item; userId: string }) {
       }
 
       notify("Pengajuan dikirim", "Permintaan peminjaman Anda sudah tercatat.");
+      
+      // Menggunakan nomor dari .env atau nomor sementara untuk keperluan testing/demo
+      const adminPhone = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || "6285776418145";
+      if (adminPhone) {
+        const message = `Halo Admin, saya *${userName}* ingin meminjam barang *${item.name}* (Jumlah: ${values.quantity}).\n\nTujuan: ${values.purpose}\nTanggal Pinjam: ${values.borrow_date}\nTanggal Kembali: ${values.return_date}\n\nMohon untuk di-review pengajuannya di web. Terima kasih.`;
+        const encodedMessage = encodeURIComponent(message);
+        window.open(`https://wa.me/${adminPhone}?text=${encodedMessage}`, "_blank");
+      }
+
       router.push("/my-loans");
       router.refresh();
     });

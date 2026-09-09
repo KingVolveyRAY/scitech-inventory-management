@@ -29,7 +29,7 @@ export async function getLoggedInUser() {
     return null;
   }
 
-  const profile = await getCurrentUserProfile(session.secret);
+  const profile = await getCurrentUserProfile(session.secret, session.userId);
   if (!profile) {
     return null;
   }

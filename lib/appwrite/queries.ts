@@ -278,8 +278,11 @@ export async function getActiveLoans() {
   return loans.filter((loan) => loan.status === "approved" || loan.status === "overdue");
 }
 
-export async function getCurrentUserProfile(sessionSecret?: string) {
+export async function getCurrentUserProfile(sessionSecret?: string, userId?: string) {
   if (!hasAppwriteConfig()) {
+    if (userId) {
+      return mockProfiles.find((p) => p.userId === userId) ?? mockProfiles[1];
+    }
     return mockProfiles[1];
   }
 

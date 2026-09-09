@@ -9,7 +9,7 @@ import type {
 
 const now = new Date().toISOString();
 
-export const mockProfiles: Profile[] = [
+export let mockProfiles: Profile[] = [
   {
     userId: "user-admin",
     full_name: "Alya Admin",
@@ -27,10 +27,19 @@ export const mockProfiles: Profile[] = [
     department: "Design",
     created_at: now,
     is_active: true
+  },
+  {
+    userId: "user-rayhan",
+    full_name: "rayhan ramadhan",
+    email: "rayhanramadan402@gmail.com",
+    role: "client",
+    department: "Client",
+    created_at: now,
+    is_active: true
   }
 ];
 
-export const mockItems: Item[] = [
+export let mockItems: Item[] = [
   {
     $id: "item-1",
     name: "Projector Epson EB-X06",
@@ -66,7 +75,7 @@ export const mockItems: Item[] = [
   }
 ];
 
-export const mockLoans: Loan[] = [
+export let mockLoans: Loan[] = [
   {
     $id: "loan-1",
     item_id: "item-1",
